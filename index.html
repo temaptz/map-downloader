@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 1024px;
+            height: 640px;
+        }
+
+        .ymaps-2-1-79-copyrights-pane {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="map"></div>
+</body>
+
+<script type="text/javascript">
+    let aLat = 0;
+    let aLon = 0;
+    let bLat = 0;
+    let bLon = 0;
+
+    initQueryParams();
+
+    setTimeout(() => {
+        ymaps.ready(initMap);
+    }, 1000);
+
+    function initMap() {
+        const bounds = [[aLon, aLat], [bLon, bLat]];
+        console.log('INIT WITH BOUNDS', bounds);
+
+        const map = new ymaps.Map('map', {
+        bounds,
+        // zoom: 19, // от 0 (весь мир) до 19.
+        type: 'yandex#hybrid',
+        controls: []
+    }, {
+        restrictMapArea: true,
+        suppressMapOpenBlock: true,
+        yandexMapDisablePoiInteractivity: true,
+    });
+
+        console.log('MAP BOUNDS', map.getBounds());
+
+        waitMapReady();
+    }
+
+    function waitMapReady() {
+        // @TODO Хорошо бы ноучиться отслеживать полоноту загрузки карты
+        setTimeout(() => {
+            const div = document.createElement('div');
+            div.id = 'ready';
+            document.querySelector('body').appendChild(div);
+        }, 1000 * 30);
+    }
+
+    function initQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const width = params.get('width');
+        const height = params.get('height');
+        const apiKey = params.get('apiKey');
+
+        aLat = parseFloat(params.get('aLat'));
+        aLon = parseFloat(params.get('aLon'));
+        bLat = parseFloat(params.get('bLat'));
+        bLon = parseFloat(params.get('bLon'));
+
+        if (width && height) {
+            const map = document.querySelector('#map');
+            map.style.width = `${width}px`;
+            map.style.height = `${height}px`;
+        }
+
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://api-maps.yandex.ru/2.1/?apikey='+apiKey+'&lang=ru_RU';
+            document.querySelector('html').appendChild(script);
+        }
+    }
+</script>
+
+</html>
