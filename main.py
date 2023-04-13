@@ -4,6 +4,8 @@ import images
 # Точки между которыми нужно просматривать карту
 coordinates_left_bottom = [61.800829, 34.297632]
 coordinates_right_top = [61.820178, 34.362048]
+# Масштабирование итогового изображения, чтобы не было слишком огромным
+result_scale_percent = 10
 
 # Шаг
 delta_lon = 0.0009 # 0.0008121323331948815
@@ -49,4 +51,4 @@ while bottom_left_lat < source_coordinates['top_right_lat']:
     bottom_left_lon = coordinates_left_bottom[0]
     bottom_left_lat += delta_lat
 
-images.concat(10)
+images.concat(scale_percent=result_scale_percent)
