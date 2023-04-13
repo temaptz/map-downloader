@@ -1,0 +1,119 @@
+<html>
+
+<head>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 1120px;
+            height: 710px;
+        }
+
+        .ymaps-2-1-79-copyrights-pane {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="map"></div>
+</body>
+
+<script type="text/javascript">
+    let bottomLeftLon = 0;
+    let bottomLeftLat = 0;
+    let topRightLon = 0;
+    let topRightLat = 0;
+
+    initQueryParams();
+
+    setTimeout(() => {
+        try {
+            ymaps.ready(initMap);
+        } catch (e) {
+            console.error('Error creating map', e && e.message || e);
+            window.location.reload();
+        }
+    }, 500);
+
+    function initMap() {
+        const bounds = [[bottomLeftLon, bottomLeftLat], [topRightLon, topRightLat]];
+
+        const map = new ymaps.Map('map', {
+            // bounds,
+            // center: [61.810391, 34.326093],
+            // zoom: 19, // от 0 (весь мир) до 19.
+            type: 'yandex#hybrid',
+            controls: [],
+            avoidFractionalZoom: false,
+            ...ymaps.util.bounds.getCenterAndZoom(
+                bounds,
+                [document.querySelector('#map').clientWidth, document.querySelector('#map').clientHeight],
+                undefined,
+                {
+                    preciseZoom: true
+                }
+            ),
+        }, {
+            restrictMapArea: true,
+            suppressMapOpenBlock: true,
+            yandexMapDisablePoiInteractivity: true,
+        });
+
+        const realBounds = map.getBounds();
+
+        console.log(`BOTTOM LEFT LON: ${realBounds[0][0]}`);
+        console.log(`BOTTOM LEFT LAT: ${realBounds[0][1]}`);
+        console.log(`TOP RIGHT LON: ${realBounds[1][0]}`);
+        console.log(`TOP RIGHT LAT: ${realBounds[1][1]}`);
+
+        console.log(
+            'DELTA BOUNDS',
+            realBounds[0][0] - bounds[0][0],
+            realBounds[0][1] - bounds[0][1],
+            realBounds[1][0] - bounds[1][0],
+            realBounds[1][1] - bounds[1][1],
+        );
+
+        waitMapReady();
+    }
+
+    function waitMapReady() {
+        // @TODO Хорошо бы ноучиться отслеживать полоноту загрузки карты
+        setTimeout(() => {
+            const div = document.createElement('div');
+            div.id = 'ready';
+            document.querySelector('body').appendChild(div);
+        }, 1000 * 3);
+    }
+
+    function initQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const width = params.get('width');
+        const height = params.get('height');
+        const apiKey = params.get('apiKey');
+
+        bottomLeftLon = parseFloat(params.get('bottom_left_lon'));
+        bottomLeftLat = parseFloat(params.get('bottom_left_lat'));
+        topRightLon = parseFloat(params.get('top_right_lon'));
+        topRightLat = parseFloat(params.get('top_right_lat'));
+
+        if (width && height) {
+            const map = document.querySelector('#map');
+            map.style.width = `${width}px`;
+            map.style.height = `${height}px`;
+        }
+
+        if (apiKey) {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://api-maps.yandex.ru/2.1/?apikey=' + apiKey + '&lang=ru_RU';
+            document.querySelector('html').appendChild(script);
+        }
+    }
+</script>
+
+</html>
