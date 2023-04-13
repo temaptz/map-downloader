@@ -8,6 +8,8 @@ import config
 import time
 import re
 
+import images
+
 
 def take(
         bottom_left_lon: float,
@@ -15,7 +17,8 @@ def take(
         top_right_lon: float,
         top_right_lat: float,
         lon_number: int,
-        lat_number: int
+        lat_number: int,
+        image_scale_percent: int = 100
 ) -> [[float, float], [float, float]]:
     d = DesiredCapabilities.CHROME
     d['goog:loggingPrefs'] = {'browser': 'ALL'}
@@ -66,8 +69,15 @@ def take(
             if (match_top_right_lat and match_top_right_lat[1]):
                 correct_top_right_lat = float(match_top_right_lat[1])
 
-    driver.get_screenshot_as_file('screens/img_' + str(lat_number) + '-' + str(lon_number) + '.png')
+    file_path = 'screens/img_' + str(lat_number) + '-' + str(lon_number) + '.png'
+    driver.get_screenshot_as_file(file_path)
     driver.quit()
+
+    if image_scale_percent != 100:
+        images.resize(
+            file_path=file_path,
+            scale_percent=image_scale_percent,
+        )
 
     return get_bounds_by_points(
         bottom_left_lon=correct_bottom_left_lon,

@@ -3,7 +3,7 @@ import pathlib
 import re
 import cv2
 
-def concat(scale_percent: int = 100):
+def concat():
     screens_path = pathlib.Path(__file__).parent.resolve().joinpath('screens')
     dir = os.listdir(str(screens_path))
     max_lat = None
@@ -45,11 +45,13 @@ def concat(scale_percent: int = 100):
 
     concated_horizontal = cv2.hconcat(horizontal_list)
 
-    width = int(concated_horizontal.shape[1] * scale_percent / 100)
-    height = int(concated_horizontal.shape[0] * scale_percent / 100)
-
-    resized = cv2.resize(concated_horizontal, (width, height), interpolation=cv2.INTER_AREA)
-
-    cv2.imwrite(str(screens_path.joinpath('result.png')), resized)
+    cv2.imwrite(str(screens_path.joinpath('result.png')), concated_horizontal)
 
     print('Images concatenated')
+
+def resize(file_path: str, scale_percent: int):
+    img = cv2.imread(file_path)
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    resized = cv2.resize(img, (width, height), interpolation=cv2.INTER_AREA)
+    cv2.imwrite(file_path, resized)
