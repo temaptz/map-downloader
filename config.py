@@ -1,16 +1,20 @@
 # Яндекс карты js api
 api_key = ''
 
-# Размеры оного кусочка карты
+# Размеры одного кусочка карты
 map_width = 1120
 map_height = 710
+
+# Сдвиг одного кусочка карты
+map_delta_lon = 0.007207432457242646
+map_delta_lat = 0.02403259277342329
 
 #Таймаут загрузки карты
 map_wait_timeout_sec = 5
 
 # Точки между которыми нужно просматривать карту
-coordinates_left_bottom = [61.726522, 34.105986]
-coordinates_right_top = [62.077195, 34.619360]
+coordinates_left_bottom = [61.750741, 34.215507]
+coordinates_right_top = [61.826485, 34.474201]
 
 # Масштабирование итогового изображения, чтобы не было слишком огромным
-result_scale_percent = 10
+result_scale_percent = 100

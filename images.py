@@ -26,10 +26,10 @@ def concat():
 
     horizontal_list = []
 
-    while (lat_iterator < max_lat):
+    while (lat_iterator <= max_lat):
         vertical_list = []
 
-        while (lon_iterator < max_lon):
+        while (lon_iterator <= max_lon):
             img = str(screens_path.joinpath('img_'+str(lat_iterator)+'-'+str(lon_iterator)+'.png'))
             vertical_list.append(
                 cv2.imread(img)
