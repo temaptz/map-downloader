@@ -7,6 +7,7 @@ import pathlib
 import config
 import time
 import re
+import os
 
 import images
 
@@ -69,7 +70,7 @@ def take(
             if (match_top_right_lat and match_top_right_lat[1]):
                 correct_top_right_lat = float(match_top_right_lat[1])
 
-    file_path = 'screens/img_' + str(lat_number) + '-' + str(lon_number) + '.png'
+    file_path = get_screen_fullpath(lon_number=lon_number, lat_number=lat_number)
     driver.get_screenshot_as_file(file_path)
     driver.quit()
 
@@ -112,6 +113,7 @@ def get_points_by_bounds(
         'top_right_lat': bounds[1][1]
     }
 
+
 def print_bounds_diff(
         a: [[float, float], [float, float]],
         b: [[float, float], [float, float]]
@@ -127,3 +129,15 @@ def print_bounds_diff(
         'top_right_lon': a[1][0] - b[1][0],
         'top_right_lat': a[1][1] - b[1][1]
     }
+
+def get_screen_filename(lon_number: int, lat_number: int) -> str:
+    return 'img_' + str(lat_number) + '-' + str(lon_number) + '.png'
+
+
+def get_screen_fullpath(lon_number: int, lat_number: int) -> str:
+    return 'screens/' + get_screen_filename(lon_number=lon_number, lat_number=lat_number)
+
+
+def is_screen_exists(lon_number: int, lat_number: int) -> bool:
+    return os.path.exists(get_screen_fullpath(lon_number=lon_number, lat_number=lat_number))
+
